@@ -1,4 +1,5 @@
-import subprocess
+import subprocess, os
+os.system("")
 class bcolors:
     OKBLUE = '\033[94m'
     WARNING = '\033[93m'
@@ -11,5 +12,5 @@ print(f"{bcolors.LINE}---------------------------------------{bcolors.WARNING}")
 print(f"{bcolors.OKBLUE}Now downloading...")
 print(f"{bcolors.LINE}---------------------------------------{bcolors.ENDC}")
 quality = """ -f bestvideo[vcodec^=avc][ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best --remux mp4 """
-command = "yt-dlp" + quality + link + " --add-metadata --write-subs --write-comments -P Downloads "
+command = "yt-dlp" + quality + link + " --add-metadata --embed-subs --write-subs --write-sub --sub-format=srv3 --write-comments -P Downloads "
 subprocess.run(command)

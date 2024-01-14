@@ -1,4 +1,5 @@
-import subprocess
+import subprocess, os
+os.system("")
 class bcolors:
     OKBLUE = '\033[94m'
     WARNING = '\033[93m'
