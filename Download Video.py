@@ -11,6 +11,6 @@ link = input(f"{bcolors.WARNING}Link {bcolors.ENDC}> {bcolors.WARNING}")
 print(f"{bcolors.LINE}---------------------------------------{bcolors.WARNING}")
 print(f"{bcolors.OKBLUE}Now downloading...")
 print(f"{bcolors.LINE}---------------------------------------{bcolors.ENDC}")
-quality = """ -f bestvideo[vcodec^=avc][ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best --remux mp4 """
+quality = """ --remux mp4 """
 command = "yt-dlp" + quality + link + " --add-metadata --write-subs --embed-subs -P Downloads "
 subprocess.run(command)
