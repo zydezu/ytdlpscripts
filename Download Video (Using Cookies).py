@@ -1,5 +1,7 @@
 import subprocess, os
 os.system("")
+with open("browserofchoice.txt") as f:
+    browser = f.read()
 class bcolors:
     OKBLUE = '\033[94m'
     WARNING = '\033[93m'
@@ -11,6 +13,6 @@ link = input(f"{bcolors.WARNING}Link {bcolors.ENDC}> {bcolors.WARNING}")
 print(f"{bcolors.LINE}---------------------------------------{bcolors.WARNING}")
 print(f"{bcolors.OKBLUE}Now downloading...")
 print(f"{bcolors.LINE}---------------------------------------{bcolors.ENDC}")
-quality = """ --remux mp4 """
-command = "yt-dlp" + quality + link + " --add-metadata --write-subs --embed-subs --cookies-from-browser firefox -P Downloads "
+quality = "--remux mp4"
+command = f"yt-dlp {quality} {link} --add-metadata --write-subs --embed-subs --cookies-from-browser {browser} -P Downloads "
 subprocess.run(command)
