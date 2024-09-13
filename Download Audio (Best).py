@@ -11,6 +11,6 @@ link = input(f"{bcolors.WARNING}Link {bcolors.ENDC}> {bcolors.WARNING}")
 print(f"{bcolors.LINE}---------------------------------------{bcolors.WARNING}")
 print(f"{bcolors.OKBLUE}Now downloading...")
 print(f"{bcolors.LINE}---------------------------------------{bcolors.ENDC}")
-quality = """ -x -P Downloads """
-command = "yt-dlp" + quality + link
+quality = "-x"
+command = f"yt-dlp {quality} {link} -P Downloads"
 subprocess.run(command)

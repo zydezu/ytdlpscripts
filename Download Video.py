@@ -11,6 +11,6 @@ link = input(f"{bcolors.WARNING}Link {bcolors.ENDC}> {bcolors.WARNING}")
 print(f"{bcolors.LINE}---------------------------------------{bcolors.WARNING}")
 print(f"{bcolors.OKBLUE}Now downloading...")
 print(f"{bcolors.LINE}---------------------------------------{bcolors.ENDC}")
-quality = """ --remux mp4 """
-command = "yt-dlp" + quality + link + " --add-metadata --write-subs --embed-subs -P Downloads "
+quality = "--remux mp4 "
+command = f"yt-dlp {quality} {link} --add-metadata --write-subs --embed-subs -P Downloads"
 subprocess.run(command)
