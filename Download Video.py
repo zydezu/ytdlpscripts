@@ -12,5 +12,5 @@ print(f"{bcolors.LINE}---------------------------------------{bcolors.WARNING}")
 print(f"{bcolors.OKBLUE}Now downloading...")
 print(f"{bcolors.LINE}---------------------------------------{bcolors.ENDC}")
 quality = "--remux mp4 "
-command = f"yt-dlp {quality} {link} --add-metadata --write-subs --embed-subs -P Downloads"
+command = f"yt-dlp {quality} {link} --add-metadata --restrict-filenames --write-subs --embed-subs -P Downloads"
 subprocess.run(command)
