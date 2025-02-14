@@ -12,5 +12,5 @@ print(f"{bcolors.LINE}---------------------------------------{bcolors.WARNING}")
 print(f"{bcolors.OKBLUE}Now downloading...")
 print(f"{bcolors.LINE}---------------------------------------{bcolors.ENDC}")
 quality = "-x"
-command = f"yt-dlp {quality} {link} --restrict-filenames -P Downloads"
+command = f"yt-dlp {quality} {link} --embed-thumbnail -P Downloads"
 subprocess.run(command)
