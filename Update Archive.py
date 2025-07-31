@@ -13,7 +13,7 @@ quality = "-f bestvideo[vcodec^=avc][ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/b
 
 print(f"{bcolors.WARNING}Getting currently downloaded videos...{bcolors.ENDC}")
 
-filenames = next(walk(os.path.join(os.getcwd(), "Downloads", "Archive")), (None, None, []))[2] # [] if no file
+filenames = next(walk(os.path.join(os.getcwd(), "downloads", "Archive")), (None, None, []))[2] # [] if no file
 filenames = [filename.replace('.info.json', '').replace('.mp4', '') for filename in filenames]
 
 pattern = re.compile(r'\[([^\]]+)\]')
@@ -24,7 +24,7 @@ print(f"{bcolors.OKBLUE}Updating...")
 for video in videoIDs:
     print(f"{bcolors.LINE}---------------------------------------{bcolors.WARNING}")
     print(f"{bcolors.WARNING}Checking: {bcolors.OKBLUE}{video[0]}{bcolors.ENDC}")
-    command = f"yt-dlp {quality} {video[1]} --skip-download --add-metadata --embed-subs --write-subs --write-comments -P Downloads/Archive"
+    command = f"yt-dlp {quality} {video[1]} --skip-download --add-metadata --embed-subs --write-subs --write-comments -P downloads/Archive"
     subprocess.run(command)
 print(f"{bcolors.LINE}---------------------------------------{bcolors.WARNING}")
 print(f"{bcolors.OKBLUE}Done!")
