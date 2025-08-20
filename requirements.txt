@@ -1,0 +1,9 @@
+certifi
+chardet
+Click
+idna
+requests
+requests-toolbelt
+urllib3
+pyupload
+pywin32

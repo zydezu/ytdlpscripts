@@ -1,5 +1,7 @@
-import subprocess, os, sys, shutil
+import subprocess, os, sys
+import win32clipboard as clip
 from pathlib import Path
+from catboxuploader import CatboxUploader
 os.system("")
 class bcolors:
     OKBLUE = '\033[94m'
@@ -33,26 +35,64 @@ def open_file_in_explorer(file_path):
     if not file_path or not os.path.exists(file_path):
         return False
 
-    # if sys.platform.startswith("win"):
-    #     subprocess.run(f'explorer /select,"{os.path.normpath(file_path)}"')
-    # elif sys.platform.startswith("darwin"):
-    #     subprocess.run(["open", "-R", file_path])
-    # else:
-    #     subprocess.run(["xdg-open", os.path.dirname(file_path)])
+    # try:
+    #     if sys.platform.startswith("win"):
+    #         subprocess.run(f'explorer /select,"{os.path.normpath(file_path)}"')
+    #     elif sys.platform.startswith("darwin"):
+    #         subprocess.run(["open", "-R", file_path])
+    #     else:
+    #         subprocess.run(["xdg-open", os.path.dirname(file_path)])
+    # except Exception as e:
+    #     print("Failed to open file explorer:", e)
+    #     return False
 
     try:
+        abs_path = os.path.abspath(file_path)
+
         if sys.platform.startswith("win"):
-            powershell_cmd = f'Set-Clipboard -Path "{os.path.abspath(file_path)}"'
-            subprocess.run(["powershell", "-Command", powershell_cmd], check=True)
+            clip.OpenClipboard()
+            clip.EmptyClipboard()
+
+            # CF_HDROP = list of files as UTF-16 with double null terminator
+            files = abs_path + '\0'
+            data = files.encode('utf-16le') + b'\0\0'
+            clip.SetClipboardData(clip.RegisterClipboardFormat("FileNameW"), data)
+
+            clip.CloseClipboard()
+
         elif sys.platform.startswith("darwin"):
-            subprocess.run(f'echo "{os.path.abspath(file_path)}" | pbcopy', shell=True)
+            applescript = f'''
+            set theFile to POSIX file "{abs_path}" as alias
+            tell application "Finder"
+                set the clipboard to (theFile as alias)
+            end tell
+            '''
+            subprocess.run(["osascript", "-e", applescript])
+
         else:
-            subprocess.run(f'echo "{os.path.abspath(file_path)}" | xclip -selection clipboard', shell=True)
+            uri = f"file://{abs_path}"
+            process = subprocess.Popen(
+                ['xclip', '-selection', 'clipboard', '-t', 'x-special/gnome-copied-files'],
+                stdin=subprocess.PIPE
+            )
+            process.communicate(input=f"copy\n{uri}".encode())
+
     except Exception as e:
         print("Clipboard copy failed:", e)
         return False
 
     return True
+
+def copy_url_to_clipboard(url):
+    try:
+        if sys.platform.startswith("win"):
+            subprocess.run(f'echo {url.strip()}| clip', shell=True, check=True)
+        elif sys.platform.startswith("darwin"):
+            subprocess.run("pbcopy", text=True, input=url.strip(), check=True)
+        else:  # Linux (requires xclip or xsel installed)
+            subprocess.run("xclip -selection clipboard", shell=True, text=True, input=url.strip(), check=True)
+    except Exception as e:
+        print("Failed to copy to clipboard:", e)
 
 def download_with_ytdlp(link):        
     downloads_dir = get_downloads_folder()
@@ -122,6 +162,11 @@ def main():
         open_file_in_explorer(non_json_files[0])  
     elif downloaded_file:
         open_file_in_explorer(downloaded_file)
+        if os.path.getsize(downloaded_file) > 10 * 1024 * 1024:
+            uploader = CatboxUploader(downloaded_file)
+            url = uploader.execute()
+            copy_url_to_clipboard(url)
+            print("Uploaded to Catbox:", url)
     else:
         print(f"{bcolors.FAIL}Download failed or no file was downloaded.{bcolors.ENDC}")
 
