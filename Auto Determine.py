@@ -1,4 +1,4 @@
-import subprocess, os, sys
+import subprocess, os, sys, shutil
 from pathlib import Path
 os.system("")
 class bcolors:
@@ -30,10 +30,29 @@ def filter_out_json_files(files):
     return [f for f in files if not f.lower().endswith('.json')]
 
 def open_file_in_explorer(file_path):
-    if file_path and os.path.exists(file_path):
+    if not file_path or not os.path.exists(file_path):
+        return False
+
+    if sys.platform.startswith("win"):
         subprocess.run(f'explorer /select,"{os.path.normpath(file_path)}"')
-        return True
-    return False
+    elif sys.platform.startswith("darwin"):
+        subprocess.run(["open", "-R", file_path])
+    else:
+        subprocess.run(["xdg-open", os.path.dirname(file_path)])
+
+    try:
+        if sys.platform.startswith("win"):
+            powershell_cmd = f'Set-Clipboard -Path "{os.path.abspath(file_path)}"'
+            subprocess.run(["powershell", "-Command", powershell_cmd], check=True)
+        elif sys.platform.startswith("darwin"):
+            subprocess.run(f'echo "{os.path.abspath(file_path)}" | pbcopy', shell=True)
+        else:
+            subprocess.run(f'echo "{os.path.abspath(file_path)}" | xclip -selection clipboard', shell=True)
+    except Exception as e:
+        print("Clipboard copy failed:", e)
+        return False
+
+    return True
 
 def download_with_ytdlp(link):        
     downloads_dir = get_downloads_folder()
