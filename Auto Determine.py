@@ -33,12 +33,12 @@ def open_file_in_explorer(file_path):
     if not file_path or not os.path.exists(file_path):
         return False
 
-    if sys.platform.startswith("win"):
-        subprocess.run(f'explorer /select,"{os.path.normpath(file_path)}"')
-    elif sys.platform.startswith("darwin"):
-        subprocess.run(["open", "-R", file_path])
-    else:
-        subprocess.run(["xdg-open", os.path.dirname(file_path)])
+    # if sys.platform.startswith("win"):
+    #     subprocess.run(f'explorer /select,"{os.path.normpath(file_path)}"')
+    # elif sys.platform.startswith("darwin"):
+    #     subprocess.run(["open", "-R", file_path])
+    # else:
+    #     subprocess.run(["xdg-open", os.path.dirname(file_path)])
 
     try:
         if sys.platform.startswith("win"):
