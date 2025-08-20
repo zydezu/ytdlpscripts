@@ -166,7 +166,7 @@ def main():
             uploader = CatboxUploader(downloaded_file)
             url = uploader.execute()
             copy_url_to_clipboard(url)
-            print("Uploaded to Catbox:", url)
+            print(f"{bcolors.OKGREEN}Uploaded to Catbox: {bcolors.WARNING}{url}{bcolors.ENDC}")
     else:
         print(f"{bcolors.FAIL}Download failed or no file was downloaded.{bcolors.ENDC}")
 
