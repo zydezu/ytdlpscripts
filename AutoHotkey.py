@@ -21,3 +21,4 @@ command = [
     link
 ]
 subprocess.run(command)
+os.startfile(os.getcwd())
