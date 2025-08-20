@@ -5,12 +5,18 @@ class bcolors:
     WARNING = '\033[93m'
     LINE = '\033[90m'
     ENDC = '\033[0m'
-print(f"{bcolors.OKBLUE}Enter the link of the {bcolors.WARNING}video{bcolors.OKBLUE} you would like to download...{bcolors.ENDC}")
+print(f"{bcolors.OKBLUE}Enter the link of the {bcolors.WARNING}image{bcolors.OKBLUE} you would like to download...{bcolors.ENDC}")
 print(f"{bcolors.LINE}---------------------------------------")
 link = input(f"{bcolors.WARNING}Link {bcolors.ENDC}> {bcolors.WARNING}")
 print(f"{bcolors.LINE}---------------------------------------{bcolors.WARNING}")
-print(f"{bcolors.OKBLUE}Now downloading...")
+print(f"{bcolors.OKBLUE}Now downloading...{bcolors.ENDC}")
 print(f"{bcolors.LINE}---------------------------------------{bcolors.ENDC}")
-quality = "--remux mp4 "
-command = f"yt-dlp {quality} {link} --add-metadata --write-subs --embed-subs --embed-thumbnail -P downloads"
+command = [
+    "gallery-dl",
+    "-d", "downloads (images)",
+    "--cookies", "cookies.txt",
+    "--write-metadata",
+    "--ugoira", "mp4",
+    link
+]
 subprocess.run(command)
