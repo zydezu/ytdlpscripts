@@ -15,7 +15,6 @@ command = [
     "gallery-dl",
     "-d", "downloads (images)",
     "--cookies", "cookies.txt",
-    "--write-metadata",
     "--ugoira", "mp4",
     link
 ]

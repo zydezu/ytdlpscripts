@@ -129,7 +129,6 @@ def download_with_gallery_dl(link):
         "gallery-dl",
         "-d", downloads_dir,
         "--cookies", "cookies.txt",
-        "--write-metadata",
         "--ugoira", "mp4",
         link
     ]
