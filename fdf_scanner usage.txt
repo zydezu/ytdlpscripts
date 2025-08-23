@@ -1,0 +1,1 @@
+.\fdf_scanner.exe -i "downloads (images)\twitter\armpitjobfan" -w -o "deleteduplicatefiles"

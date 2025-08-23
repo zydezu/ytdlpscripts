@@ -2,3 +2,4 @@ __pycache__/
 downloads/
 downloads (images)/
 cookies.txt
+*.bat
