@@ -1,0 +1,1 @@
+ python khinsider.py --format flac https://downloads.khinsider.com/game-soundtracks/album/persona-4-original-soundtrack
