@@ -11,5 +11,5 @@ link = input(f"{bcolors.WARNING}Link {bcolors.ENDC}> {bcolors.WARNING}")
 print(f"{bcolors.LINE}---------------------------------------{bcolors.WARNING}")
 print(f"{bcolors.OKBLUE}Now downloading...")
 print(f"{bcolors.LINE}---------------------------------------{bcolors.ENDC}")
-command = f"yt-dlp --skip-download {link} --restrict-filenames --write-comments -P downloads"
+command = f"yt-dlp --skip-download '{link}' --restrict-filenames --write-comments -P downloads"
 subprocess.run(command)

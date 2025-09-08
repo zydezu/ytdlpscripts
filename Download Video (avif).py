@@ -14,7 +14,7 @@ print(f"{bcolors.OKBLUE}Now downloading...")
 print(f"{bcolors.LINE}---------------------------------------{bcolors.ENDC}")
 quality = "--remux mp4 "
 output_path = "downloads/%(title)s.%(ext)s"
-command = f"yt-dlp {quality} {link} --add-metadata --write-subs --embed-subs --embed-thumbnail -o \"{output_path}\""
+command = f"yt-dlp {quality} '{link}' --add-metadata --write-subs --embed-subs --embed-thumbnail -o \"{output_path}\""
 subprocess.run(command, shell=True)
 
 downloads_dir = "downloads"

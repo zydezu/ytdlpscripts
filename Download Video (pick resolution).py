@@ -14,6 +14,6 @@ res = input(f"{bcolors.WARNING}Resolution {bcolors.ENDC}> {bcolors.WARNING}")
 print(f"{bcolors.LINE}---------------------------------------{bcolors.WARNING}")
 print(f"{bcolors.OKBLUE}Now downloading...")
 print(f"{bcolors.LINE}---------------------------------------{bcolors.ENDC}")
-quality = f"-f bestvideo[height<={res}][vcodec^=avc][ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best --remux mp4"
-command = f"yt-dlp {quality} {link} --add-metadata --write-subs --embed-subs --embed-thumbnail -P downloads"
+quality = f"-f 'bestvideo[height<={res}][vcodec^=avc][ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best' --remux mp4"
+command = f"yt-dlp {quality} '{link}' --add-metadata --write-subs --embed-subs --embed-thumbnail -P downloads"
 subprocess.run(command)
