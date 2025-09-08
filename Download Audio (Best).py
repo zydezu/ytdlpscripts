@@ -13,4 +13,4 @@ print(f"{bcolors.OKBLUE}Now downloading...")
 print(f"{bcolors.LINE}---------------------------------------{bcolors.ENDC}")
 quality = "-x"
 command = f"yt-dlp {quality} '{link}' --embed-thumbnail -P downloads"
-subprocess.run(command)
+subprocess.run(command, shell=True)

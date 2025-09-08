@@ -18,4 +18,4 @@ command = [
     "--ugoira", "mp4",
     link
 ]
-subprocess.run(command)
+subprocess.run(command, shell=True)

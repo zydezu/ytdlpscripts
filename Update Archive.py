@@ -25,6 +25,6 @@ for video in videoIDs:
     print(f"{bcolors.LINE}---------------------------------------{bcolors.WARNING}")
     print(f"{bcolors.WARNING}Checking: {bcolors.OKBLUE}{video[0]}{bcolors.ENDC}")
     command = f"yt-dlp {quality} {video[1]} --skip-download --add-metadata --embed-subs --write-subs --write-comments -P downloads/Archive"
-    subprocess.run(command)
+    subprocess.run(command, shell=True)
 print(f"{bcolors.LINE}---------------------------------------{bcolors.WARNING}")
 print(f"{bcolors.OKBLUE}Done!")
