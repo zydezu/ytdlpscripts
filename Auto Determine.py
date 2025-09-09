@@ -102,7 +102,7 @@ def download_with_ytdlp(link):
     initial_files = get_all_files_in_directory(downloads_dir)
     
     # Run the download command
-    command = f"yt-dlp {quality} '{link}' --add-metadata --write-subs --embed-subs --cookies cookies.txt --embed-thumbnail -P {downloads_dir}"
+    command = f"yt-dlp {quality} {link} --add-metadata --write-subs --embed-subs --cookies cookies.txt --embed-thumbnail -P {downloads_dir}"
     result = subprocess.run(command, shell=True)
     
     if result.returncode != 0:
