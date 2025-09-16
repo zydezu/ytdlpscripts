@@ -31,20 +31,20 @@ def find_new_files(initial_files, final_files):
 def filter_out_json_files(files):
     return [f for f in files if not f.lower().endswith('.json')]
 
-def open_file_in_explorer(file_path):
+def open_file_in_explorer_and_copy_to_clipboard(file_path):
     if not file_path or not os.path.exists(file_path):
         return False
 
-    # try:
-    #     if sys.platform.startswith("win"):
-    #         subprocess.run(f'explorer /select,"{os.path.normpath(file_path)}"')
-    #     elif sys.platform.startswith("darwin"):
-    #         subprocess.run(["open", "-R", file_path])
-    #     else:
-    #         subprocess.run(["xdg-open", os.path.dirname(file_path)])
-    # except Exception as e:
-    #     print("Failed to open file explorer:", e)
-    #     return False
+    try:
+        if sys.platform.startswith("win"):
+            subprocess.run(f'explorer /select,"{os.path.normpath(file_path)}"')
+        elif sys.platform.startswith("darwin"):
+            subprocess.run(["open", "-R", file_path])
+        else:
+            subprocess.run(["xdg-open", os.path.dirname(file_path)])
+    except Exception as e:
+        print("Failed to open file explorer:", e)
+        return False
 
     try:
         abs_path = os.path.abspath(file_path)
@@ -152,15 +152,17 @@ def main():
     print(f"{bcolors.OKBLUE}Now downloading...")
     print(f"{bcolors.LINE}---------------------------------------{bcolors.ENDC}")
 
+    # TODO: use uploadurl.txt
+
     downloaded_files = download_with_gallery_dl(link)
     if not downloaded_files:
         downloaded_file = download_with_ytdlp(link)
 
     if downloaded_files:      
         non_json_files = filter_out_json_files(downloaded_files)
-        open_file_in_explorer(non_json_files[0])  
+        open_file_in_explorer_and_copy_to_clipboard(non_json_files[0])  
     elif downloaded_file:
-        open_file_in_explorer(downloaded_file)
+        open_file_in_explorer_and_copy_to_clipboard(downloaded_file)
         if os.path.getsize(downloaded_file) > 10 * 1024 * 1024:
             uploader = CatboxUploader(downloaded_file)
             url = uploader.execute()

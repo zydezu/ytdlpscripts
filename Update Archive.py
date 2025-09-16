@@ -1,7 +1,7 @@
 import subprocess, os
 import re
 from os import walk
-from os import path
+
 os.system("")
 class bcolors:
     OKBLUE = '\033[94m'
