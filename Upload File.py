@@ -39,7 +39,8 @@ def get_upload_url(file_path):
             if url:
                 return url
 
-UPLOADURL = get_upload_url("uploadurl.txt")
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+UPLOADURL = get_upload_url(os.path.join(SCRIPT_DIR, "uploadurl.txt"))
 
 def copy_url_to_clipboard(url):
     try:
@@ -223,14 +224,17 @@ def add_text_to_thumbnail(thumbnail_path, text, info):
     combined.convert("RGB").save(thumbnail_path)
 
 if __name__ == "__main__":
-    root = tk.Tk()
-    root.withdraw()
-    file_path = filedialog.askopenfilename(
-        title="Select the file to upload"
-    )
-    if not file_path:
-        print("No file selected.")
-        exit(1)
+    if sys.argv[1:]:
+        file_path = sys.argv[1]
+    else:
+        root = tk.Tk()
+        root.withdraw()
+        file_path = filedialog.askopenfilename(
+            title="Select the file to upload"
+        )
+        if not file_path:
+            print("No file selected.")
+            exit(1)
 
     print(f"{bcolors.OKBLUE}Uploading...{bcolors.ENDC}")
 
@@ -251,9 +255,9 @@ if __name__ == "__main__":
     if is_video(file_path):
         info = get_video_info(file_path)
 
-        thumbnail_filename = filename.rsplit(".", 1)[0] + ".png"  # save as PNG
+        thumbnail_filename = filename.rsplit(".", 1)[0] + ".png"
         thumbnail_url = f"{UPLOADURL}/uploads/discord/thumbnails/{thumbnail_filename}"
-        thumbnail_path = os.path.join(os.getcwd(), thumbnail_filename)
+        thumbnail_path = os.path.join(SCRIPT_DIR, thumbnail_filename)
 
         try:
             create_thumbnail_keyframe(file_path, thumbnail_path)
@@ -264,21 +268,22 @@ if __name__ == "__main__":
             print(f"Thumbnail upload failed: {e}")
 
         discord_file_name = filename.rsplit(".", 1)[0] + ".html"
+        discord_file_path = os.path.join(SCRIPT_DIR, discord_file_name)
 
-        generate_html_file(url, thumbnail_url, info["width"], info["height"], discord_file_name)
+        generate_html_file(url, thumbnail_url, info["width"], info["height"], discord_file_path)
 
         discord_html_url = f"{UPLOADURL}/uploads/discord/{discord_file_name}"
 
         try:
-            subprocess.run(["curl", "--globoff", "-T", discord_file_name, discord_html_url], check=True)
+            subprocess.run(["curl", "--globoff", "-T", discord_file_path, discord_html_url], check=True)
             print(f"HTML page uploaded: {discord_html_url}")
         except subprocess.CalledProcessError as e:
             print(f"HTML upload failed: {e}")
 
         try:
-            os.remove(discord_file_name)
-            print(f"Deleted local HTML file: {discord_file_name}")
-            os.remove(thumbnail_filename)
+            os.remove(discord_file_path)
+            print(f"Deleted local HTML file: {discord_file_path}")
+            os.remove(os.path.join(SCRIPT_DIR, thumbnail_filename))
             print(f"Deleted local thumbnail file: {thumbnail_filename}")
         except Exception as e:
             print(f"Error deleting local files: {e}")
