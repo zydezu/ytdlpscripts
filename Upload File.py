@@ -94,7 +94,7 @@ def get_video_info(file_path):
             "-show_format",
             file_path
         ]
-        result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+        result = subprocess.run(cmd, capture_output=True, text=True, check=True, encoding="utf-8")
         info = json.loads(result.stdout)
 
         video_stream = next(
