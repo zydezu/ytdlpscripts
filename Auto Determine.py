@@ -96,13 +96,14 @@ def copy_url_to_clipboard(url):
 
 def download_with_ytdlp(link):        
     downloads_dir = get_downloads_folder()
+
     quality = "--remux mp4"
     
     # Get files before download
     initial_files = get_all_files_in_directory(downloads_dir)
     
     # Run the download command
-    command = f"yt-dlp {quality} {link} --add-metadata --write-subs --embed-subs --cookies cookies.txt --embed-thumbnail -P {downloads_dir}"
+    command = f'yt-dlp {quality} "{link}" --add-metadata --write-subs --embed-subs --cookies cookies.txt --embed-thumbnail -P {downloads_dir}'
     result = subprocess.run(command, shell=True)
     
     if result.returncode != 0:
@@ -125,13 +126,7 @@ def download_with_gallery_dl(link):
     initial_files = get_all_files_in_directory(downloads_dir)
 
     # Run the download command
-    command = [
-        "gallery-dl",
-        "-d", downloads_dir,
-        "--cookies", "cookies.txt",
-        "--ugoira", "mp4",
-        link
-    ]
+    command = f'gallery-dl -d "{downloads_dir}" --cookies "cookies.txt" --ugoira mp4 "{link}"'
 
     result = subprocess.run(command, shell=True)
 
@@ -152,8 +147,6 @@ def main():
     print(f"{bcolors.OKBLUE}Now downloading...")
     print(f"{bcolors.LINE}---------------------------------------{bcolors.ENDC}")
 
-    # TODO: use uploadurl.txt
-
     downloaded_files = download_with_gallery_dl(link)
     if not downloaded_files:
         downloaded_file = download_with_ytdlp(link)
@@ -163,11 +156,6 @@ def main():
         open_file_in_explorer_and_copy_to_clipboard(non_json_files[0])  
     elif downloaded_file:
         open_file_in_explorer_and_copy_to_clipboard(downloaded_file)
-        if os.path.getsize(downloaded_file) > 10 * 1024 * 1024:
-            uploader = CatboxUploader(downloaded_file)
-            url = uploader.execute()
-            copy_url_to_clipboard(url)
-            print(f"{bcolors.OKGREEN}Uploaded to Catbox: {bcolors.WARNING}{url}{bcolors.ENDC}")
     else:
         print(f"{bcolors.FAIL}Download failed or no file was downloaded.{bcolors.ENDC}")
 
