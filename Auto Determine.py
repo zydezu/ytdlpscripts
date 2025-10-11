@@ -2,6 +2,7 @@ import subprocess, os, sys
 import win32clipboard as clip
 from pathlib import Path
 from catboxuploader import CatboxUploader
+uploadfile = __import__("Upload File")
 os.system("")
 class bcolors:
     OKBLUE = '\033[94m'
@@ -156,6 +157,7 @@ def main():
         open_file_in_explorer_and_copy_to_clipboard(non_json_files[0])  
     elif downloaded_file:
         open_file_in_explorer_and_copy_to_clipboard(downloaded_file)
+        uploadfile.upload(downloaded_file)
     else:
         print(f"{bcolors.FAIL}Download failed or no file was downloaded.{bcolors.ENDC}")
 

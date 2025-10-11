@@ -223,19 +223,7 @@ def add_text_to_thumbnail(thumbnail_path, text, info):
 
     combined.convert("RGB").save(thumbnail_path)
 
-if __name__ == "__main__":
-    if sys.argv[1:]:
-        file_path = sys.argv[1]
-    else:
-        root = tk.Tk()
-        root.withdraw()
-        file_path = filedialog.askopenfilename(
-            title="Select the file to upload"
-        )
-        if not file_path:
-            print("No file selected.")
-            exit(1)
-
+def upload(file_path):
     print(f"{bcolors.OKBLUE}Uploading...{bcolors.ENDC}")
 
     filename = sanitize_filename(os.path.basename(file_path))
@@ -289,3 +277,18 @@ if __name__ == "__main__":
             print(f"Error deleting local files: {e}")
 
         copy_url_to_clipboard(discord_html_url)
+
+if __name__ == "__main__":
+    if sys.argv[1:]:
+        file_path = sys.argv[1]
+    else:
+        root = tk.Tk()
+        root.withdraw()
+        file_path = filedialog.askopenfilename(
+            title="Select the file to upload"
+        )
+        if not file_path:
+            print("No file selected.")
+            exit(1)
+
+    upload(file_path)
