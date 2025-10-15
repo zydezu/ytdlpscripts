@@ -8,3 +8,5 @@ urllib3
 pyupload
 pywin32
 pyperclip
+pywin32
+pillow
