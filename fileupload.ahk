@@ -2,7 +2,7 @@
 ; Hotkey: Ctrl+Alt+T
 ^!t::
 {
-    pythonFile := "C:\Users\User\Downloads\ytdlp\Upload File to Catbox.py"
+    pythonFile := "C:\Users\User\Downloads\ytdlp\Upload File.py"
     pythonDir := "C:\Users\User\Downloads\ytdlp"
 
     Run 'cmd.exe /c cd /d "' pythonDir '" && python "' pythonFile '"', pythonDir
