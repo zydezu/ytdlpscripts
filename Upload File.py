@@ -32,7 +32,7 @@ class bcolors:
     LINE = '\033[90m'
     ENDC = '\033[0m'
 
-def get_upload_url(file_path):
+def get_file_contents(file_path):
     if os.path.exists(file_path):
         with open(file_path, "r") as f:
             url = f.read().strip()
@@ -40,10 +40,14 @@ def get_upload_url(file_path):
                 return url
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-UPLOADURL = get_upload_url(os.path.join(SCRIPT_DIR, "uploadurl.txt"))
+UPLOADURL = get_file_contents(os.path.join(SCRIPT_DIR, "uploadurl.txt"))
+UPLOADLOGIN = get_file_contents(os.path.join(SCRIPT_DIR, "uploadlogin.txt"))
 upload_url_exists = False
+upload_login_exists = False
 if UPLOADURL:
     upload_url_exists = True
+if UPLOADLOGIN:
+    upload_login_exists = True
 
 def copy_url_to_clipboard(url):
     try:
@@ -242,10 +246,22 @@ def upload(file_path):
     url = f"{UPLOADURL}/uploads/{is_video_file if 'discord/videos/' else ''}{filename}"
 
     try:
-        subprocess.run(
-            ["curl", "--globoff", "-T", file_path, url],
-            check=True
-        )
+        if upload_login_exists:
+            login_parts = UPLOADLOGIN.split(":")
+            if len(login_parts) == 2:
+                username, password = login_parts
+                subprocess.run(
+                    ["curl", "--globoff", "--user", f"{username}:{password}", "-T", file_path, url],
+                    check=True
+                )
+            else:
+                print(f"{bcolors.FAIL}Invalid upload login format. Use username:password.{bcolors.ENDC}")
+                return
+        else:
+            subprocess.run(
+                ["curl", "--globoff", "-T", file_path, url],
+                check=True
+            )
         print(f"{bcolors.OKGREEN}Upload complete: {bcolors.WARNING}{url}{bcolors.ENDC}")
     except subprocess.CalledProcessError as e:
         print(f"Upload failed: {e}")
