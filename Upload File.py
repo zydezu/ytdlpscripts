@@ -41,6 +41,9 @@ def get_upload_url(file_path):
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 UPLOADURL = get_upload_url(os.path.join(SCRIPT_DIR, "uploadurl.txt"))
+upload_url_exists = False
+if UPLOADURL:
+    upload_url_exists = True
 
 def copy_url_to_clipboard(url):
     try:
@@ -224,12 +227,19 @@ def add_text_to_thumbnail(thumbnail_path, text, info):
     combined.convert("RGB").save(thumbnail_path)
 
 def upload(file_path):
+    if not upload_url_exists:
+        print(f"{bcolors.FAIL}Upload URL not configured. Please set it in uploadurl.txt.{bcolors.ENDC}")
+        return
+
     print(f"{bcolors.OKBLUE}Uploading...{bcolors.ENDC}")
 
     filename = sanitize_filename(os.path.basename(file_path))
     if file_exists_on_server(filename):
         filename = uniquify_filename(filename)
-    url = f"{UPLOADURL}/uploads/discord/videos/{filename}"
+
+    is_video_file = is_video(file_path)
+
+    url = f"{UPLOADURL}/uploads/{is_video_file if 'discord/videos/' else ''}{filename}"
 
     try:
         subprocess.run(
@@ -240,7 +250,7 @@ def upload(file_path):
     except subprocess.CalledProcessError as e:
         print(f"Upload failed: {e}")
 
-    if is_video(file_path):
+    if is_video_file:
         info = get_video_info(file_path)
 
         thumbnail_filename = filename.rsplit(".", 1)[0] + ".png"
@@ -277,6 +287,8 @@ def upload(file_path):
             print(f"Error deleting local files: {e}")
 
         copy_url_to_clipboard(discord_html_url)
+    else:
+        copy_url_to_clipboard(url)
 
 if __name__ == "__main__":
     if sys.argv[1:]:
