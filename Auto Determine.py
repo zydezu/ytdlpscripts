@@ -147,7 +147,13 @@ def main():
     print(f"{bcolors.OKBLUE}Now downloading...")
     print(f"{bcolors.LINE}---------------------------------------{bcolors.ENDC}")
 
-    downloaded_files = download_with_gallery_dl(link)
+    probably_a_video = False
+    if ("youtube.com" or "youtu.be") in link:
+        probably_a_video = True
+
+    downloaded_files = []
+    if not probably_a_video:
+        downloaded_files = download_with_gallery_dl(link)
     if not downloaded_files:
         downloaded_file = download_with_ytdlp(link)
 
