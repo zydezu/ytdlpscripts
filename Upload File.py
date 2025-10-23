@@ -230,6 +230,13 @@ def add_text_to_thumbnail(thumbnail_path, text, info):
 
     combined.convert("RGB").save(thumbnail_path)
 
+def upload_file(file_path, upload_url, username=None, password=None):
+    cmd = ["curl", "--globoff", "-T", file_path, upload_url]
+    if username and password:
+        cmd.insert(2, "--user")
+        cmd.insert(3, f"{username}:{password}")
+    subprocess.run(cmd, check=True)
+
 def upload(file_path):
     if not upload_url_exists:
         print(f"{bcolors.FAIL}Upload URL not configured. Please set it in uploadurl.txt.{bcolors.ENDC}")
@@ -244,16 +251,15 @@ def upload(file_path):
     is_video_file = is_video(file_path)
 
     url = f"{UPLOADURL}/uploads/{'discord/videos/' if is_video_file else ''}{filename}"
+    username = ""
+    password = ""
 
     try:
         if upload_login_exists:
             login_parts = UPLOADLOGIN.split(":")
             if len(login_parts) == 2:
                 username, password = login_parts
-                subprocess.run(
-                    ["curl", "--globoff", "--user", f"{username}:{password}", "-T", file_path, url],
-                    check=True
-                )
+                upload_file(file_path, url, username, password)
             else:
                 print(f"{bcolors.FAIL}Invalid upload login format. Use username:password.{bcolors.ENDC}")
                 return
@@ -276,7 +282,7 @@ def upload(file_path):
         try:
             create_thumbnail_keyframe(file_path, thumbnail_path)
             add_text_to_thumbnail(thumbnail_path, f"{filename}", info)
-            subprocess.run(["curl", "--globoff", "-T", thumbnail_path, thumbnail_url], check=True)
+            upload_file(thumbnail_path, thumbnail_url, username, password)
             print(f"{bcolors.OKGREEN}Thumbnail uploaded: {bcolors.WARNING}{thumbnail_url}{bcolors.ENDC}")
         except subprocess.CalledProcessError as e:
             print(f"Thumbnail upload failed: {e}")
@@ -289,7 +295,7 @@ def upload(file_path):
         discord_html_url = f"{UPLOADURL}/uploads/discord/{discord_file_name}"
 
         try:
-            subprocess.run(["curl", "--globoff", "-T", discord_file_path, discord_html_url], check=True)
+            upload_file(discord_file_path, discord_html_url, username, password)
             print(f"HTML page uploaded: {discord_html_url}")
         except subprocess.CalledProcessError as e:
             print(f"HTML upload failed: {e}")
