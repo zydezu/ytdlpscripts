@@ -243,7 +243,7 @@ def upload(file_path):
 
     is_video_file = is_video(file_path)
 
-    url = f"{UPLOADURL}/uploads/{is_video_file if 'discord/videos/' else ''}{filename}"
+    url = f"{UPLOADURL}/uploads/{'discord/videos/' if is_video_file else ''}{filename}"
 
     try:
         if upload_login_exists:
