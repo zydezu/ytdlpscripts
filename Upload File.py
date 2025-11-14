@@ -130,6 +130,27 @@ def get_video_info(file_path):
     except subprocess.CalledProcessError as e:
         raise RuntimeError(f"ffprobe failed: {e.stderr}")
 
+def remux_mov_to_mp4(input_path):
+    if not input_path.lower().endswith(".mov"):
+        return input_path, False
+
+    output_path = os.path.splitext(input_path)[0] + ".mp4"
+
+    cmd = [
+        "ffmpeg", "-y",
+        "-i", input_path,
+        "-c", "copy",
+        output_path
+    ]
+
+    try:
+        subprocess.run(cmd, check=True)
+        print(f"Remuxed MOV → MP4: {output_path}")
+        return output_path, True
+    except subprocess.CalledProcessError as e:
+        print(f"Failed to remux MOV → MP4: {e}")
+        return input_path, False
+
 def generate_html_file(url, thumbnail_url, width, height, output_path):
     html_content = TEMPLATE_HTML.format(
         url=url,
@@ -325,4 +346,12 @@ if __name__ == "__main__":
             print("No file selected.")
             exit(1)
 
+    file_path, was_remuxed = remux_mov_to_mp4(file_path)
     upload(file_path)
+
+    if was_remuxed:
+        try:
+            os.remove(file_path)
+            print(f"Deleted temporary remux file: {file_path}")
+        except Exception as e:
+            print(f"Error deleting remuxed file: {e}")
