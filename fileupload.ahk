@@ -12,7 +12,5 @@
         ProcessWaitClose("python.exe")
     }
 
-    if WinExist("ahk_exe cmd.exe") {
-        WinClose("ahk_exe cmd.exe")
-    }
+    try WinClose("ahk_exe cmd.exe")
 }

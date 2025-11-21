@@ -30,5 +30,5 @@
     ProcessWaitClose("python.exe")
 
     ; Step 5: Close the CMD window
-    WinClose("ahk_exe cmd.exe")
+    try WinClose("ahk_exe cmd.exe")
 }
