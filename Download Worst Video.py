@@ -12,5 +12,5 @@ print(f"{bcolors.LINE}---------------------------------------{bcolors.WARNING}")
 print(f"{bcolors.OKBLUE}Now downloading...")
 print(f"{bcolors.LINE}---------------------------------------{bcolors.ENDC}")
 quality = '-f "bestvideo[height<=144][vcodec^=avc][ext=mp4][format_note!*=AI-upscaled]+worstaudio" --remux mp4'
-command = f"yt-dlp {quality} {link} --restrict-filenames --write-subs --embed-subs -P downloads"
+command = f'yt-dlp {quality} "{link}" --restrict-filenames --write-subs --embed-subs -P downloads'
 subprocess.run(command, shell=True)
