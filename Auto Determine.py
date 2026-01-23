@@ -1,5 +1,4 @@
-import subprocess, os, sys
-import win32clipboard as clip
+import subprocess, os, sys, shutil
 from pathlib import Path
 uploadfile = __import__("Upload File")
 os.system("")
@@ -37,6 +36,7 @@ def open_file_in_explorer_and_copy_to_clipboard(file_path):
 
     try:
         if sys.platform.startswith("win"):
+            import win32clipboard as clip
             subprocess.run(f'explorer /select,"{os.path.normpath(file_path)}"')
         elif sys.platform.startswith("darwin"):
             subprocess.run(["open", "-R", file_path])
@@ -71,12 +71,26 @@ def open_file_in_explorer_and_copy_to_clipboard(file_path):
 
         else:
             uri = f"file://{abs_path}"
-            process = subprocess.Popen(
-                ['xclip', '-selection', 'clipboard', '-t', 'x-special/gnome-copied-files'],
-                stdin=subprocess.PIPE
-            )
-            process.communicate(input=f"copy\n{uri}".encode())
-
+            if shutil.which("wl-copy"):
+                # Wayland
+                subprocess.run(
+                    ["wl-copy", "-t", "text/uri-list"],
+                    input=uri.encode(),
+                    check=True
+                )
+            elif shutil.which("xclip"):
+                # X11
+                subprocess.run(
+                    [
+                        "xclip",
+                        "-selection", "clipboard",
+                        "-t", "x-special/gnome-copied-files"
+                    ],
+                    input=f"copy\n{uri}".encode(),
+                    check=True
+                )
+            else:
+                raise RuntimeError("No clipboard utility found (wl-copy/xclip)")
     except Exception as e:
         print("Clipboard copy failed:", e)
         return False

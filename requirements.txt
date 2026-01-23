@@ -6,9 +6,8 @@ requests
 requests-toolbelt
 urllib3
 pyupload
-pywin32
 pyperclip
-pywin32
 pillow
 gallery-dl
 ttconv
+pywin32; platform_system == "Windows"
