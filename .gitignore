@@ -1,4 +1,5 @@
 __pycache__/
+.venv/
 downloads/
 downloads (images)/
 cookies.txt
