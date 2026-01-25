@@ -10,4 +10,7 @@ pyperclip
 pillow
 gallery-dl
 ttconv
+yt-dlp
+yt-dlp-ejs
+mutagen
 pywin32; platform_system == "Windows"
