@@ -1,5 +1,4 @@
 certifi
-chardet
 Click
 idna
 requests
