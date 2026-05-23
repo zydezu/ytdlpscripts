@@ -1,0 +1,24 @@
+[project]
+name = "ytdlp"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "certifi>=2026.2.25",
+    "click>=8.3.1",
+    "fake-useragent>=2.2.0",
+    "gallery-dl>=1.31.9",
+    "idna>=3.11",
+    "mutagen>=1.47.0",
+    "pillow>=12.1.1",
+    "pyperclip>=1.11.0",
+    "pyupload>=0.1.4",
+    "pywin32>=311 ; sys_platform == 'win32'",
+    "requests>=2.32.5",
+    "requests-toolbelt>=1.0.0",
+    "ttconv>=1.2.1",
+    "urllib3>=2.6.3",
+    "yt-dlp>=2026.3.3",
+    "yt-dlp-ejs>=0.5.0",
+]

@@ -1,16 +1,24 @@
-import subprocess, os
+import os
+import subprocess
+
 os.system("")
+
+
 class bcolors:
-    OKBLUE = '\033[94m'
-    WARNING = '\033[93m'
-    LINE = '\033[90m'
-    ENDC = '\033[0m'
-print(f"{bcolors.OKBLUE}Enter the link of the {bcolors.WARNING}video{bcolors.OKBLUE} you would like to download...{bcolors.ENDC}")
+    OKBLUE = "\033[94m"
+    WARNING = "\033[93m"
+    LINE = "\033[90m"
+    ENDC = "\033[0m"
+
+
+print(
+    f"{bcolors.OKBLUE}Enter the link of the {bcolors.WARNING}video{bcolors.OKBLUE} you would like to download...{bcolors.ENDC}"
+)
 print(f"{bcolors.LINE}---------------------------------------")
 link = input(f"{bcolors.WARNING}Link {bcolors.ENDC}> {bcolors.WARNING}")
 print(f"{bcolors.LINE}---------------------------------------{bcolors.WARNING}")
 print(f"{bcolors.OKBLUE}Now downloading...")
 print(f"{bcolors.LINE}---------------------------------------{bcolors.ENDC}")
-quality = '-f "bv[format_note!*=AI-upscaled]+ba" --remux mp4'
+quality = '-f "bestvideo[format_note!*=AI-upscaled]+bestaudio/bestvideo+bestaudio/best" --remux mp4'
 command = f'yt-dlp {quality} "{link}" --add-metadata --write-subs --embed-subs --embed-thumbnail --cookies cookies.txt -P downloads'
 subprocess.run(command, shell=True)
