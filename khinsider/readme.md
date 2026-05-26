@@ -2,6 +2,8 @@
 
 `khinsider.py` is a [Python](https://www.python.org/) interface and script for getting [khinsider](http://downloads.khinsider.com/) soundtracks. It makes khinsider mass downloads a breeze. It's easy to use - check it!
 
+You can either run `download.py` directly, `khinsider.py` through the command line or use `khinsider.py` as a module.
+
 From the command line (i.e. regular usage):
 
 ```cmd
@@ -16,11 +18,7 @@ khinsider.download('jumping-flash')
 # And bam, you've got the Jumping Flash soundtrack!
 ```
 
-For anime music, [check out `thehylia.py`](https://github.com/obskyr/thehylia).
-
-Carefully put together by [@obskyr](http://twitter.com/obskyr)!
-
-### **[Download it here!](https://github.com/obskyr/khinsider/archive/master.zip)**
+Originally made by [@obskyr](http://twitter.com/obskyr)!
 
 ## Usage
 
