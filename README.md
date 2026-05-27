@@ -23,7 +23,7 @@ A collection of convenience wrapper scripts around [yt-dlp](https://github.com/y
 ## Installation
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/zydezu/ytdlpscripts
 cd ytdlp
 pip install -r requirements.txt
 # or, if using uv:
