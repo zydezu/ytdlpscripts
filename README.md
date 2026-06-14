@@ -71,6 +71,7 @@ All scripts are interactive — run them and paste a URL when prompted.
 - `pyperclip` / `pywin32` — clipboard access
 - `requests` — HTTP for uploads
 - `click` — CLI utilities
+- `tk` — GUI utilities
 - `bs4` — HTML parsing (khinsider)
 - `ttconv` — TTML→SRT conversion
 - `certifi`, `urllib3`, `idna`, `charset-normalizer`, etc.
