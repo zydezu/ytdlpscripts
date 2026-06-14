@@ -70,6 +70,7 @@ Below is a list of scripts and what they do. Run them and enter the URL when pro
 - `pyperclip` / `pywin32` - clipboard access
 - `requests` - HTTP for uploads
 - `click` - CLI utilities
+- `tk` - GUI utilities
 - `bs4` - HTML parsing (khinsider)
 - `ttconv` - TTML→SRT conversion
 - `certifi`, `urllib3`, `idna`, `charset-normalizer`, etc.
