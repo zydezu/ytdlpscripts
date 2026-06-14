@@ -1,24 +1,6 @@
-import os
-import subprocess
+from shared import prompt_link, start_downloading, run_ytdlp
 
-os.system("")
-
-
-class bcolors:
-    OKBLUE = "\033[94m"
-    WARNING = "\033[93m"
-    LINE = "\033[90m"
-    ENDC = "\033[0m"
-
-
-print(
-    f"{bcolors.OKBLUE}Enter the link of the {bcolors.WARNING}video{bcolors.OKBLUE} you would like to download...{bcolors.ENDC}"
-)
-print(f"{bcolors.LINE}---------------------------------------")
-link = input(f"{bcolors.WARNING}Link {bcolors.ENDC}> {bcolors.WARNING}")
-print(f"{bcolors.LINE}---------------------------------------{bcolors.WARNING}")
-print(f"{bcolors.OKBLUE}Now downloading...")
-print(f"{bcolors.LINE}---------------------------------------{bcolors.ENDC}")
+link = prompt_link("video")
+start_downloading()
 quality = '-f "bestvideo[height<=144][vcodec^=avc][ext=mp4][format_note!*=AI-upscaled]+worstaudio/worstvideo+worstaudio" --remux mp4'
-command = f'yt-dlp {quality} "{link}" --restrict-filenames --write-subs --embed-subs --cookies cookies.txt -P downloads'
-subprocess.run(command, shell=True)
+run_ytdlp(quality, link, "--restrict-filenames --write-subs --embed-subs")

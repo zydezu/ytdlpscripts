@@ -8,6 +8,8 @@ from urllib.parse import unquote, urljoin, urlsplit
 
 from fake_useragent import UserAgent
 
+_ua = UserAgent()
+
 
 class Silence:
     def __enter__(self):
@@ -147,10 +149,6 @@ def to_valid_filename(s):
     return FILENAME_INVALID_RE.sub("-", s)
 
 
-def unicodePrint(*args, **kwargs):
-    print(*args, **kwargs)
-
-
 def lazyProperty(func):
     attrName = "_lazy_" + func.__name__
 
@@ -165,9 +163,7 @@ def lazyProperty(func):
 
 
 def getSoup(*args, **kwargs):
-    ua = UserAgent()
-    headers = {"User-Agent": ua.random}
-
+    headers = {"User-Agent": _ua.random}
     r = requests.get(*args, **kwargs, headers=headers)
     return toSoup(r)
 
@@ -215,29 +211,29 @@ def friendlyDownloadFile(file, path, index, total, verbose=False):
 
     if not os.path.exists(path):
         if verbose:
-            unicodePrint("Downloading {}: {}...".format(numberStr, filename))
+            print("Downloading {}: {}...".format(numberStr, filename))
         for triesElapsed in range(3):
             if verbose and triesElapsed:
-                unicodePrint(
+                print(
                     "Couldn't download {}. Trying again...".format(filename),
                     file=sys.stderr,
                 )
             try:
                 file.download(path)
-            except requests.ConnectionError, requests.Timeout:
+            except (requests.ConnectionError, requests.Timeout):
                 pass
             else:
                 break
         else:
             if verbose:
-                unicodePrint(
+                print(
                     "Couldn't download {}. Skipping over.".format(filename),
                     file=sys.stderr,
                 )
             return False
     else:
         if verbose:
-            unicodePrint(
+            print(
                 "Skipping over {}: {}. Already exists.".format(numberStr, filename)
             )
 
@@ -349,7 +345,6 @@ class Soundtrack:
         anchors = [a for a in table("a") if a.find("img")]
         urls = [a["href"] for a in anchors]
         images = [File(urljoin(self.url, url)) for url in urls]
-        print(images)
         return images
 
     def download(self, path="", makeDirs=True, formatOrder=None, verbose=False):
@@ -366,8 +361,7 @@ class Soundtrack:
 
         Return True if all files were downloaded successfully, False if not.
         """
-        path = os.path.join(getcwd(), path)
-        path = os.path.abspath(os.path.realpath(path))
+        path = os.path.realpath(os.path.join(getcwd(), path))
         if formatOrder:
             formatOrder = [extension.lower() for extension in formatOrder]
             if not set(self.availableFormats) & set(formatOrder):
@@ -385,7 +379,7 @@ class Soundtrack:
         totalFiles = len(files)
 
         if makeDirs and not os.path.isdir(path):
-            os.makedirs(os.path.abspath(os.path.realpath(path)))
+            os.makedirs(path)
 
         success = True
         for fileNumber, file in enumerate(files, 1):
@@ -413,10 +407,10 @@ class Song:
 
     @lazyProperty
     def _soup(self):
-        r = requests.get(self.url, timeout=10)
+        r = requests.get(self.url, timeout=10, headers={"User-Agent": _ua.random})
         if r.url.rsplit("/", 1)[-1] == "404":
             raise NonexistentSongError("Nonexistent song page (404).")
-        return getSoup(self.url)
+        return toSoup(r)
 
     @lazyProperty
     def name(self):
@@ -462,7 +456,7 @@ def download(soundtrackId, path=None, makeDirs=True, formatOrder=None, verbose=F
     soundtrack.name  # To conistently always load the content in advance.
     path = to_valid_filename(soundtrack.name) if path is None else path
     if verbose:
-        unicodePrint('Downloading to "{}".'.format(path))
+        print('Downloading to "{}".'.format(path))
     return soundtrack.download(path, makeDirs, formatOrder, verbose)
 
 
@@ -527,7 +521,7 @@ def printSearchResults(searchResults, file=sys.stdout):
                     soundtrack.id, "." * (padLen - len(soundtrack.id)), soundtrack.name
                 )
             hasPreviousList = True
-    unicodePrint(s, end="", file=file)
+    print(s, end="", file=file)
 
 
 # --- And now for the execution. ---
@@ -735,7 +729,7 @@ if __name__ == "__main__":
                 except KeyboardInterrupt:
                     print("Stopped download.", file=sys.stderr)
                     return 1
-        except requests.ConnectionError, requests.Timeout:
+        except (requests.ConnectionError, requests.Timeout):
             print("Could not connect to KHInsider.", file=sys.stderr)
             print("Make sure you have a working internet connection.", file=sys.stderr)
             return 1
