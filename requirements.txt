@@ -13,3 +13,6 @@ yt-dlp
 yt-dlp-ejs
 mutagen
 pywin32; platform_system == "Windows"
+beautifulsoup4
+fake-useragent
+soupsieve

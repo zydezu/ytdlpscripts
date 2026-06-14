@@ -1,4 +1,11 @@
-from shared import bcolors, prompt_link, start_downloading, run_ytdlp, get_latest_mp4, convert_to_avif
+from shared import (
+    bcolors,
+    convert_to_avif,
+    get_latest_mp4,
+    prompt_link,
+    run_ytdlp,
+    start_downloading,
+)
 
 link = prompt_link("video")
 start_downloading()

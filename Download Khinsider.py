@@ -1,12 +1,9 @@
-import os
 import re
 import sys
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from khinsider import (
     NonexistentFormatsError,
     NonexistentSoundtrackError,
-    Soundtrack,
     download,
 )
 

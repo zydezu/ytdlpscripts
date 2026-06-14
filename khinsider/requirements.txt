@@ -1,9 +1,0 @@
-bs4
-certifi
-charset-normalizer
-fake-useragent
-idna
-requests
-soupsieve
-typing_extensions
-urllib3

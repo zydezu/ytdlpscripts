@@ -203,11 +203,14 @@ def getAppropriateFile(song, formatOrder):
 def friendlyDownloadFile(file, path, index, total, verbose=False):
     numberStr = "{}/{}".format(str(index).zfill(len(str(total))), str(total))
 
-    if file is None and verbose:
-        print(
-            "Song {} is nonexistent (404: Not Found). Skipping over.".format(numberStr),
-            file=sys.stderr,
-        )
+    if file is None:
+        if verbose:
+            print(
+                "Song {} is nonexistent (404: Not Found). Skipping over.".format(
+                    numberStr
+                ),
+                file=sys.stderr,
+            )
         return False
 
     filename = to_valid_filename(file.filename)
@@ -237,9 +240,7 @@ def friendlyDownloadFile(file, path, index, total, verbose=False):
             return False
     else:
         if verbose:
-            print(
-                "Skipping over {}: {}. Already exists.".format(numberStr, filename)
-            )
+            print("Skipping over {}: {}. Already exists.".format(numberStr, filename))
 
     return True
 
@@ -308,7 +309,8 @@ class Soundtrack:
     def _contentSoup(self):
         soup = getSoup(self.url)
         contentSoup = soup.find(id="pageContent")
-        if contentSoup.find("p").string == "No such album":
+        p = contentSoup.find("p") if contentSoup else None
+        if p and p.string == "No such album":
             # The pageContent and p exist even if the soundtrack doesn't, so no
             # need for error handling here.
             raise NonexistentSoundtrackError(self)
@@ -483,11 +485,14 @@ def search(term):
 
     tables = soup("table", class_="albumList")
     if not tables:
-        raise SearchError(soup.find("p").get_text(strip=True))
+        p = soup.find("p")
+        raise SearchError(p.get_text(strip=True) if p else "Unknown search error")
 
     soundtracks = [soundtracksInSearchTable(table) for table in tables]
     if len(soundtracks) == 1:
-        if "song" in soup.find(id="pageContent").find("p").get_text():
+        page_content = soup.find(id="pageContent")
+        p = page_content.find("p") if page_content else None
+        if p and "song" in p.get_text():
             soundtracks.insert(0, [])
         else:
             soundtracks.append([])
@@ -504,7 +509,7 @@ def soundtracksInSearchTable(table):
     soundtracks = []
     for id, name in soundtrackParams:
         curSoundtrack = Soundtrack(id)
-        curSoundtrack._lazy_name = name
+        setattr(curSoundtrack, "_lazy_name", name)
         soundtracks.append(curSoundtrack)
 
     return soundtracks

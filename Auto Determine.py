@@ -5,15 +5,12 @@ import sys
 from shared import (
     bcolors,
     copy_file_path_to_clipboard,
-    copy_url_to_clipboard,
     filter_out_json_files,
     find_new_files,
     get_all_files_in_directory,
     get_downloads_folder,
     get_image_downloads_folder,
-    get_latest_mp4,
     open_file_in_explorer,
-    start_downloading,
 )
 
 

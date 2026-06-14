@@ -59,6 +59,7 @@ Below is a list of scripts and what they do. Run them and enter the URL when pro
 | `Download srv3 Subtitles Only.py` | Download SRV3 (YouTube's custom format) subtitles only |
 | `Download Comments.py` | Download the comments from a video |
 | `Download Image.py` | Download images via gallery-dl |
+| `Download Khinsider.py` | Download game soundtracks from KHInsider |
 | `Update Archive.py` | Re-download metadata for archived videos |
 
 ## Dependencies
@@ -71,7 +72,8 @@ Below is a list of scripts and what they do. Run them and enter the URL when pro
 - `requests` - HTTP for uploads
 - `click` - CLI utilities
 - `tk` - GUI utilities
-- `bs4` - HTML parsing (khinsider)
+- `beautifulsoup4` / `bs4` - HTML parsing
+- `fake-useragent` - rotating user-agent strings
 - `ttconv` - TTML→SRT conversion
 - `certifi`, `urllib3`, `idna`, `charset-normalizer`, etc.
 
@@ -82,4 +84,4 @@ Below is a list of scripts and what they do. Run them and enter the URL when pro
 
 ## Credits
 
-The `khinsider/` subdirectory is a fork of [@obskyr](https://github.com/obskyr/khinsider).
+`khinsider.py` is from https://github.com/obskyr/khinsider.

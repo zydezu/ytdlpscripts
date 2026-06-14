@@ -1,18 +1,18 @@
 import os
-import sys
-import subprocess
 import shutil
+import subprocess
+import sys
 
 os.system("")
 
 
 class bcolors:
-    OKBLUE = '\033[94m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    LINE = '\033[90m'
-    ENDC = '\033[0m'
+    OKBLUE = "\033[94m"
+    OKGREEN = "\033[92m"
+    WARNING = "\033[93m"
+    FAIL = "\033[91m"
+    LINE = "\033[90m"
+    ENDC = "\033[0m"
 
 
 OUTPUT_TEMPLATE = "downloads/%(playlist|)s/%(title)s.%(ext)s"
@@ -21,7 +21,9 @@ DOWNLOADS_DIR = "downloads"
 
 
 def prompt_link(media_type="video"):
-    print(f"{bcolors.OKBLUE}Enter the link of the {bcolors.WARNING}{media_type}{bcolors.OKBLUE} you would like to download...{bcolors.ENDC}")
+    print(
+        f"{bcolors.OKBLUE}Enter the link of the {bcolors.WARNING}{media_type}{bcolors.OKBLUE} you would like to download...{bcolors.ENDC}"
+    )
     print(f"{bcolors.LINE}---------------------------------------")
     link = input(f"{bcolors.WARNING}Link {bcolors.ENDC}> {bcolors.WARNING}")
     print(f"{bcolors.LINE}---------------------------------------{bcolors.WARNING}")
@@ -40,7 +42,7 @@ def run_ytdlp(quality, link, extra_args=""):
 
 def get_latest_mp4(directory=DOWNLOADS_DIR):
     mp4_files = []
-    for root, dirs, files in os.walk(directory):
+    for root, _, files in os.walk(directory):
         for f in files:
             if f.endswith(".mp4"):
                 mp4_files.append(os.path.join(root, f))
@@ -72,11 +74,17 @@ def convert_to_avif(mp4_path):
 def copy_url_to_clipboard(url):
     try:
         if sys.platform.startswith("win"):
-            subprocess.run(f'echo {url.strip()}| clip', shell=True, check=True)
+            subprocess.run(f"echo {url.strip()}| clip", shell=True, check=True)
         elif sys.platform.startswith("darwin"):
             subprocess.run("pbcopy", text=True, input=url.strip(), check=True)
         else:
-            subprocess.run("xclip -selection clipboard", shell=True, text=True, input=url.strip(), check=True)
+            subprocess.run(
+                "xclip -selection clipboard",
+                shell=True,
+                text=True,
+                input=url.strip(),
+                check=True,
+            )
     except Exception as e:
         print("Failed to copy to clipboard:", e)
 
@@ -104,10 +112,11 @@ def copy_file_path_to_clipboard(file_path):
         abs_path = os.path.abspath(file_path)
         if sys.platform.startswith("win"):
             import win32clipboard as clip
+
             clip.OpenClipboard()
             clip.EmptyClipboard()
-            files = abs_path + '\0'
-            data = files.encode('utf-16le') + b'\0\0'
+            files = abs_path + "\0"
+            data = files.encode("utf-16le") + b"\0\0"
             clip.SetClipboardData(clip.RegisterClipboardFormat("FileNameW"), data)
             clip.CloseClipboard()
         elif sys.platform.startswith("darwin"):
@@ -121,12 +130,20 @@ def copy_file_path_to_clipboard(file_path):
         else:
             uri = f"file://{abs_path}"
             if shutil.which("wl-copy"):
-                subprocess.run(["wl-copy", "-t", "text/uri-list"], input=uri.encode(), check=True)
+                subprocess.run(
+                    ["wl-copy", "-t", "text/uri-list"], input=uri.encode(), check=True
+                )
             elif shutil.which("xclip"):
                 subprocess.run(
-                    ["xclip", "-selection", "clipboard", "-t", "x-special/gnome-copied-files"],
+                    [
+                        "xclip",
+                        "-selection",
+                        "clipboard",
+                        "-t",
+                        "x-special/gnome-copied-files",
+                    ],
                     input=f"copy\n{uri}".encode(),
-                    check=True
+                    check=True,
                 )
             else:
                 raise RuntimeError("No clipboard utility found (wl-copy/xclip)")
@@ -147,7 +164,7 @@ def get_image_downloads_folder():
 def get_all_files_in_directory(directory):
     all_files = []
     if os.path.exists(directory):
-        for root, dirs, files in os.walk(directory):
+        for root, _, files in os.walk(directory):
             for file in files:
                 all_files.append(os.path.join(root, file))
     return all_files
@@ -158,4 +175,4 @@ def find_new_files(initial_files, final_files):
 
 
 def filter_out_json_files(files):
-    return [f for f in files if not f.lower().endswith('.json')]
+    return [f for f in files if not f.lower().endswith(".json")]
