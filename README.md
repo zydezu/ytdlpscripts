@@ -8,7 +8,7 @@ A collection of convenience wrapper scripts around [yt-dlp](https://github.com/y
 - **Audio extraction** - best quality or MP3-converted, with thumbnail embedding
 - **Subtitle & comment downloading** - standalone scripts for subtitles (including SRV3) and comments
 - **Image downloading** - download from Pixiv, Twitter, Instagram, Reddit, etc. via `gallery-dl`
-- **Auto-detect mode** - smart downloading: yt-dlp for video links, gallery-dl for image links
+- **Auto-detect mode** - smart downloading: yt-dlp for video links, gallery-dl for image links, khinsider for soundtracks
 - **Archive update** - batch re-download metadata/comments for previously archived videos
 
 ## Requirements

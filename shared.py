@@ -94,11 +94,15 @@ def open_file_in_explorer(file_path):
         return False
     try:
         if sys.platform.startswith("win"):
-            subprocess.run(f'explorer /select,"{os.path.normpath(file_path)}"')
+            if os.path.isdir(file_path):
+                subprocess.run(f'explorer "{os.path.normpath(file_path)}"')
+            else:
+                subprocess.run(f'explorer /select,"{os.path.normpath(file_path)}"')
         elif sys.platform.startswith("darwin"):
             subprocess.run(["open", "-R", file_path])
         else:
-            subprocess.run(["xdg-open", os.path.dirname(file_path)])
+            target = file_path if os.path.isdir(file_path) else os.path.dirname(file_path)
+            subprocess.run(["xdg-open", target])
         return True
     except Exception as e:
         print("Failed to open file explorer:", e)

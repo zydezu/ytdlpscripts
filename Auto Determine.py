@@ -1,4 +1,5 @@
 import os
+import re
 import subprocess
 import sys
 
@@ -68,6 +69,32 @@ def download_with_gallery_dl(link):
     return new_files if new_files else None
 
 
+def download_with_khinsider(link):
+    from khinsider import (
+        NonexistentFormatsError,
+        NonexistentSoundtrackError,
+        Soundtrack,
+        to_valid_filename,
+    )
+
+    m = re.match(
+        r"^https?://downloads\.khinsider\.com/game-soundtracks/album/(?P<id>[^/]+)/?$",
+        link,
+        re.IGNORECASE,
+    )
+    soundtrack_id = m.group("id") if m else link
+    downloads_dir = get_downloads_folder()
+
+    try:
+        soundtrack = Soundtrack(soundtrack_id)
+        path = os.path.join(downloads_dir, to_valid_filename(soundtrack.name))
+        soundtrack.download(path, formatOrder=["flac", "mp3"], verbose=True)
+        return path
+    except (NonexistentSoundtrackError, NonexistentFormatsError) as e:
+        print(f"{bcolors.FAIL}{e}{bcolors.ENDC}")
+        return None
+
+
 def main():
     print(
         f"{bcolors.OKBLUE}Enter the link of the {bcolors.WARNING}media{bcolors.OKBLUE} you would like to download...{bcolors.ENDC}"
@@ -78,27 +105,39 @@ def main():
     print(f"{bcolors.OKBLUE}Now downloading...")
     print(f"{bcolors.LINE}---------------------------------------{bcolors.ENDC}")
 
-    probably_a_video = False
+    is_khinsider = "khinsider.com" in link
     is_music = "music.youtube.com" in link
-    if "youtube.com" in link or "youtu.be" in link:
-        probably_a_video = True
+    probably_a_video = "youtube.com" in link or "youtu.be" in link
 
-    downloaded_files = []
-    downloaded_file = None
-    if is_music:
+    if is_khinsider:
+        path = download_with_khinsider(link)
+        if path:
+            open_file_in_explorer(path)
+        else:
+            print(f"{bcolors.FAIL}Download failed or no file was downloaded.{bcolors.ENDC}")
+    elif is_music:
         downloaded_file = download_with_ytdlp(link, audio_only=True)
+        if downloaded_file:
+            open_file_in_explorer_and_copy_to_clipboard(downloaded_file)
+        else:
+            print(f"{bcolors.FAIL}Download failed or no file was downloaded.{bcolors.ENDC}")
     elif not probably_a_video:
         downloaded_files = download_with_gallery_dl(link)
-    if not downloaded_files and not is_music:
-        downloaded_file = download_with_ytdlp(link)
-
-    if downloaded_files:
-        non_json_files = filter_out_json_files(downloaded_files)
-        open_file_in_explorer_and_copy_to_clipboard(non_json_files[0])
-    elif downloaded_file:
-        open_file_in_explorer_and_copy_to_clipboard(downloaded_file)
+        if downloaded_files:
+            non_json_files = filter_out_json_files(downloaded_files)
+            open_file_in_explorer_and_copy_to_clipboard(non_json_files[0])
+        else:
+            downloaded_file = download_with_ytdlp(link)
+            if downloaded_file:
+                open_file_in_explorer_and_copy_to_clipboard(downloaded_file)
+            else:
+                print(f"{bcolors.FAIL}Download failed or no file was downloaded.{bcolors.ENDC}")
     else:
-        print(f"{bcolors.FAIL}Download failed or no file was downloaded.{bcolors.ENDC}")
+        downloaded_file = download_with_ytdlp(link)
+        if downloaded_file:
+            open_file_in_explorer_and_copy_to_clipboard(downloaded_file)
+        else:
+            print(f"{bcolors.FAIL}Download failed or no file was downloaded.{bcolors.ENDC}")
 
     sys.exit()
 
