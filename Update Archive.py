@@ -1,14 +1,13 @@
 import subprocess
 import os
 import re
-from os import walk
 from shared import bcolors
 
 quality = "-f bestvideo[vcodec^=avc][ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best --remux mp4"
 
 print(f"{bcolors.WARNING}Getting currently downloaded videos...{bcolors.ENDC}")
 
-filenames = next(walk(os.path.join(os.getcwd(), "downloads", "Archive")), (None, None, []))[2]
+filenames = next(os.walk(os.path.join(os.getcwd(), "downloads", "Archive")), (None, None, []))[2]
 filenames = [filename.replace('.info.json', '').replace('.mp4', '') for filename in filenames]
 
 pattern = re.compile(r'\[([^\]]+)\]')

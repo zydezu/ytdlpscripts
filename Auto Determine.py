@@ -87,6 +87,7 @@ def main():
         probably_a_video = True
 
     downloaded_files = []
+    downloaded_file = None
     if is_music:
         downloaded_file = download_with_ytdlp(link, audio_only=True)
     elif not probably_a_video:

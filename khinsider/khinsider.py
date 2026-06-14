@@ -15,12 +15,16 @@ class Silence:
     def __enter__(self):
         self._stdout = sys.stdout
         self._stderr = sys.stderr
-        sys.stdout = open(os.devnull, "w")
-        sys.stderr = open(os.devnull, "w")
+        self._devnull_out = open(os.devnull, "w")
+        self._devnull_err = open(os.devnull, "w")
+        sys.stdout = self._devnull_out
+        sys.stderr = self._devnull_err
 
     def __exit__(self, *_):
         sys.stdout = self._stdout
         sys.stderr = self._stderr
+        self._devnull_out.close()
+        self._devnull_err.close()
 
 
 # --- Install prerequisites ---
@@ -443,9 +447,10 @@ class File:
 
     def download(self, path):
         """Download the file to `path`."""
-        response = requests.get(self.url, timeout=10)
+        response = requests.get(self.url, timeout=10, stream=True)
         with open(path, "wb") as outFile:
-            outFile.write(response.content)
+            for chunk in response.iter_content(chunk_size=65536):
+                outFile.write(chunk)
 
 
 def download(soundtrackId, path=None, makeDirs=True, formatOrder=None, verbose=False):
